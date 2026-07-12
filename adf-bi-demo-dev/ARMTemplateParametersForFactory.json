@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-bi-demo-dev"
+		},
+		"AzureDataLakeStorageGen2_accountKey": {
+			"value": ""
+		},
+		"LS_AzureBlobStorage_connectionString": {
+			"value": ""
+		},
+		"LS_AzureSqlDB_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorageGen2_properties_typeProperties_url": {
+			"value": "https://sagundatalakestorage.dfs.core.windows.net/"
+		},
+		"LS_AzureSqlDB_properties_typeProperties_server": {
+			"value": "sql-bi-demo-server.database.windows.net"
+		},
+		"LS_AzureSqlDB_properties_typeProperties_database": {
+			"value": "sqldb-bi-sales-demo"
+		},
+		"LS_AzureSqlDB_properties_typeProperties_userName": {
+			"value": "sagunadmin"
+		}
+	}
+}
