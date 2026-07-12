@@ -1,0 +1,42 @@
+{
+	"name": "ADSL_OrdersTech",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageGen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "bronze/orders",
+				"fileSystem": "sales-data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "order_id",
+				"type": "INT32"
+			},
+			{
+				"name": "customer_id",
+				"type": "INT32"
+			},
+			{
+				"name": "product_id",
+				"type": "INT32"
+			},
+			{
+				"name": "order_date",
+				"type": "DATE"
+			},
+			{
+				"name": "quantity",
+				"type": "INT32"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

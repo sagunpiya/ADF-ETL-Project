@@ -1,0 +1,15 @@
+{
+	"name": "adf-bi-demo-dev",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "15de95db-c439-4966-9ff2-aca514f6c9ec",
+		"tenantId": "97f6200d-efb5-403c-8b70-5492a7d16101"
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"name": "TR_Daily_8AM",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_EndToEnd_Sales_Load",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2026-06-29T08:00:00",
+				"timeZone": "Central Standard Time"
+			}
+		}
+	}
+}

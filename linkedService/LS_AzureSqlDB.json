@@ -1,0 +1,17 @@
+{
+	"name": "LS_AzureSqlDB",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "sql-bi-demo-server.database.windows.net",
+			"database": "sqldb-bi-sales-demo",
+			"encrypt": "optional",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "sagunadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEZEMUVGQUJBLUI4MDUtNEYxNy1BQURELTQzOTI0RjVFNTQ4MV9jMGM5Zjc5Zi04ZGFlLTQwY2MtOTlkZi01NTJlMzVkNDliYWEiDQp9"
+		}
+	}
+}
