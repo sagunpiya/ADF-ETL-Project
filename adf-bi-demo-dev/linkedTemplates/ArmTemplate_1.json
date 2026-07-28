@@ -13,171 +13,76 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_Order')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "customer_id",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "customer_id",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "customer_name",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "customer_name",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "city",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "city",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "state",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "state",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "signup_date",
-											"type": "Date",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "signup_date",
-											"type": "Date"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_SQL_stg_Customers",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Customers",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TR_Daily_8AM')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "PL_EndToEnd_Sales_Load",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
+				"type": "MappingDataFlow",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2026-06-29T08:00:00",
-						"timeZone": "Central Standard Time"
-					}
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_SQL_OrdersTech",
+								"type": "DatasetReference"
+							},
+							"name": "DFOrdersTransformation"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "OrdersTech",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "QuantityMoreThanTwo"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          OrderID as integer,",
+						"          CustomerName as string,",
+						"          ProductName as string,",
+						"          Quantity as integer,",
+						"          Price as decimal(10,2),",
+						"          LastModifiedDate as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> DFOrdersTransformation",
+						"DFOrdersTransformation filter(Quantity>2) ~> QuantityMoreThanTwo",
+						"QuantityMoreThanTwo sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          customer_id as string,",
+						"          customer_name as string,",
+						"          city as string,",
+						"          state as string,",
+						"          signup_date as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TR_Daily_AzureSQL_To_ADLS')]",
+			"name": "[concat(parameters('factoryName'), '/Load_OrdersAt_9am')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "PL_AzureSQL_To_ADLS",
+							"referenceName": "PL_LoadOrders",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -188,8 +93,17 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2026-07-02T10:15:00",
-						"timeZone": "Central Standard Time"
+						"startTime": "2026-07-28T09:00:00",
+						"endTime": "2026-07-31T18:15:27",
+						"timeZone": "Central Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							]
+						}
 					}
 				}
 			},
