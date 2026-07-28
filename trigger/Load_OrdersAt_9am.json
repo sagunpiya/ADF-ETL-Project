@@ -1,0 +1,24 @@
+{
+	"name": "Load_OrdersAt_9am",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_LoadOrders",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2026-07-28T09:00:00",
+				"timeZone": "Central Standard Time"
+			}
+		}
+	}
+}
